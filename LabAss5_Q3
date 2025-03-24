@@ -1,0 +1,47 @@
+print("Rohit Kumar B")
+print("22BDS0442")
+
+# Load the required libraries
+library(dplyr)
+library(ggplot2)
+
+# 1. Which diamond cut has the highest number of diamonds with a price above $5000?
+cut_with_most_high_price_diamonds <- diamonds %>%
+  filter(price > 5000) %>%  # Filter diamonds with price > $5000
+  group_by(cut) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  head(1)
+
+cut_with_most_high_price_diamonds <- as.data.frame(cut_with_most_high_price_diamonds)
+print("Diamond cut with the highest number of diamonds priced above $5000:")
+print(cut_with_most_high_price_diamonds)
+
+
+# 2. On average, which diamond clarity results in the lightest diamonds?
+lightest_clarity <- diamonds %>%
+  group_by(clarity) %>%
+  summarise(avg_carat = mean(carat)) %>%
+  arrange(avg_carat) %>%
+  head(1)
+
+lightest_clarity <- as.data.frame(lightest_clarity)
+print("Diamond clarity resulting in the lightest diamonds:")
+print(lightest_clarity)
+
+# Simulating a month column for the diamonds dataset (hypothetical)
+set.seed(123)
+diamonds_with_month <- diamonds %>%
+  mutate(month = sample(month.name, nrow(diamonds), replace = TRUE))
+
+# 3. In which month of the year do diamonds tend to have the highest average price?
+highest_avg_price_month <- diamonds_with_month %>%
+  group_by(month) %>%
+  summarise(avg_price = mean(price)) %>%
+  arrange(desc(avg_price)) %>%
+  head(1)
+
+highest_avg_price_month <- as.data.frame(highest_avg_price_month)
+print("Month with the highest average diamond price (Hypothetical):")
+print(highest_avg_price_month)
+
