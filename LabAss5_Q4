@@ -1,0 +1,70 @@
+
+print("Rohit Kumar B")
+print("22BDS0442")
+
+install.packages('pscl')
+library("pscl")
+View(presidentialElections)
+
+# Load the dataset
+data("presidentialElections")
+
+# 1. Selecting Columns (year and demVote)
+election_selected <- presidentialElections %>%
+  select(year, demVote)
+
+election_selected <- as.data.frame(election_selected)
+head(election_selected)
+
+# 2. Filtering Rows for the 2008 election in Colorado
+election_2008_CO <- presidentialElections %>%
+  filter(year == 2008 & state == "Colorado")
+
+election_2008_CO <- as.data.frame(election_2008_CO)
+election_2008_CO
+
+# 3. Mutating Columns: other_parties_vote and abs_vote_difference
+election_mutated <- presidentialElections %>%
+  mutate(other_parties_vote = 100 - demVote,
+         abs_vote_difference = abs(demVote - other_parties_vote))
+
+election_mutated <- as.data.frame(election_mutated)
+head(election_mutated)
+
+# 4. Arranging Rows: by year (descending) and demVote within each year
+election_sorted <- presidentialElections %>%
+  arrange(desc(year), demVote)
+
+election_sorted <- as.data.frame(election_sorted)
+head(election_sorted)
+
+# 5. Summarizing Data: mean_dem_vote and mean_other_parties_vote
+election_summary <- presidentialElections %>%
+  summarise(mean_dem_vote = mean(demVote, na.rm = TRUE),
+            mean_other_parties_vote = mean(100 - demVote, na.rm = TRUE))
+
+election_summary <- as.data.frame(election_summary)
+election_summary
+
+# 6. Custom Summarization: furthest_from_50() and biggest_landslide
+furthest_from_50 <- function(vote_percentage) {
+  return(max(abs(vote_percentage - 50)))
+}
+
+# Apply furthest_from_50 to demVote column to find the biggest landslide
+election_landslide <- presidentialElections %>%
+  summarise(biggest_landslide = furthest_from_50(demVote))
+
+election_landslide <- as.data.frame(election_landslide)
+election_landslide
+
+# 7. Find the state with the highest Democratic vote percentage in 2008
+state_highest_demVote_2008 <- presidentialElections %>%
+  filter(year == 2008) %>%
+  arrange(desc(demVote)) %>%
+  head(1) %>%
+  select(state, demVote)
+
+state_highest_demVote_2008 <- as.data.frame(state_highest_demVote_2008)
+state_highest_demVote_2008
+
