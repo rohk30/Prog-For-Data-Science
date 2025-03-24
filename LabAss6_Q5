@@ -1,0 +1,40 @@
+
+print("Rohit Kumar B")
+print("22BDS0442")
+
+
+# Install required package if not installed
+install.packages("ggplot2")
+
+# Load the library
+library(ggplot2)
+
+# 1
+# Line plot to show temperature trends over time
+ggplot(airquality, aes(x = Day, y = Temp)) +
+  geom_line(color = "blue") +
+  labs(title = "Average Daily Temperature Over Time",
+       x = "Day",
+       y = "Temperature (F)")
+
+# 2
+# Calculate the average Ozone levels for each month
+avg_ozone <- airquality %>%
+  group_by(Month) %>%
+  summarize(avg_ozone = mean(Ozone, na.rm = TRUE))
+
+# Bar plot of average Ozone levels by Month
+ggplot(avg_ozone, aes(x = factor(Month), y = avg_ozone)) +
+  geom_bar(stat = "identity", fill = "lightblue", color = "black") +
+  labs(title = "Average Ozone Levels by Month",
+       x = "Month",
+       y = "Average Ozone Level")
+
+#3
+# Boxplot comparing wind speeds across different months
+ggplot(airquality, aes(x = factor(Month), y = Wind, fill = factor(Month))) +
+  geom_boxplot() +
+  labs(title = "Wind Speeds Across Different Months",
+       x = "Month",
+       y = "Wind Speed (mph)") +
+  scale_fill_brewer(palette = "Set3")
