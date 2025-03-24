@@ -1,0 +1,30 @@
+# Load ggplot2 library
+library(ggplot2)
+
+print("Rohit Kumar B")
+print("22BDS0442")
+
+# 1. Create the boxplot
+ggplot(mtcars, aes(x = as.factor(cyl), y = mpg, fill = as.factor(cyl))) +
+  geom_boxplot() +
+  labs(title = "Distribution of MPG by Number of Cylinders",
+       x = "Number of Cylinders",
+       y = "Miles per Gallon (MPG)") +
+  scale_fill_brewer(palette = "Set3")
+
+# 2. Create the scatter plot with regression line
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "blue", size = 3) +  # Scatter points
+  geom_smooth(method = "lm", color = "red") +  # Add regression line
+  labs(title = "Relationship Between Horsepower and MPG",
+       x = "Horsepower (HP)",
+       y = "Miles per Gallon (MPG)")
+
+# 3. Create the faceted scatter plot
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(color = "darkgreen", size = 3) +  # Scatter points
+  facet_grid(. ~ gear) +  # Facet by gear
+  labs(title = "MPG vs. Weight for Different Gear Types",
+       x = "Weight (1000 lbs)",
+       y = "Miles per Gallon (MPG)")
+
