@@ -1,0 +1,78 @@
+print("Rohit Kumar B")
+print("22BDS0442")
+
+install.packages('gapminder')
+library('gapminder')
+View(gapminder)
+
+# Load the dataset
+data("gapminder")
+
+# 1. Selecting Columns: country, year, and gdpPercap
+gapminder_selected <- gapminder %>%
+  select(country, year, gdpPercap)
+
+gapminder_selected <- as.data.frame(gapminder_selected)
+head(gapminder_selected)
+
+# 2. Filtering Rows for the year 2007 and continent "Asia"
+gapminder_asia_2007 <- gapminder %>%
+  filter(year == 2007 & continent == "Asia")
+
+gapminder_asia_2007 <- as.data.frame(gapminder_asia_2007)
+gapminder_asia_2007
+
+# 3. Mutating Columns: gdp_million and gdp_growth
+gapminder_mutated <- gapminder %>%
+  group_by(country) %>%
+  mutate(gdp_million = gdpPercap * pop / 1e6,
+         gdp_growth = if_else(year == 2007,
+                              (gdpPercap - lag(gdpPercap, n = 5)) / lag(gdpPercap, n = 5) * 100,
+                              NA_real_))
+
+gapminder_mutated <- as.data.frame(gapminder_mutated)
+head(gapminder_mutated)
+
+# 4. Arranging Rows: by gdpPercap (descending) and within each, by country
+gapminder_sorted <- gapminder %>%
+  arrange(desc(gdpPercap), country)
+
+gapminder_sorted <- as.data.frame(gapminder_sorted)
+head(gapminder_sorted)
+
+# 5. Summarizing Data: mean_gdpPercap and total_pop
+gapminder_summary <- gapminder %>%
+  summarise(mean_gdpPercap = mean(gdpPercap, na.rm = TRUE),
+            total_pop = sum(pop, na.rm = TRUE))
+
+gapminder_summary <- as.data.frame(gapminder_summary)
+gapminder_summary
+
+# 6. Custom Summarization: gdp_rank() to assign ranks based on GDP per capita
+gdp_rank <- function(gdp) {
+  return(rank(-gdp))  # rank in descending order of GDP per capita
+}
+
+# Apply gdp_rank to calculate the highest-ranked country by GDP per capita
+gapminder_ranked <- gapminder %>%
+  group_by(year) %>%
+  mutate(rank = gdp_rank(gdpPercap)) %>%
+  summarise(highest_ranked_country = country[which.min(rank)])
+
+gapminder_ranked <- as.data.frame(gapminder_ranked)
+gapminder_ranked
+
+# 7. Find the continent with the highest average GDP per capita in 2007
+continent_highest_gdp_2007 <- gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarise(avg_gdpPercap = mean(gdpPercap, na.rm = TRUE)) %>%
+  arrange(desc(avg_gdpPercap)) %>%
+  head(1) %>%
+  select(continent)
+
+continent_highest_gdp_2007 <- as.data.frame(continent_highest_gdp_2007)
+continent_highest_gdp_2007
+
+
+
