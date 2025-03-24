@@ -1,0 +1,36 @@
+
+print("Rohit Kumar B")
+print("22BDS0442")
+
+
+# Install DBI and RSQLite packages if not installed
+install.packages("DBI")
+install.packages("RSQLite")
+install.packages("tidyr")
+
+# Load required libraries
+library(DBI)
+library(RSQLite)
+library(tidyr)
+
+View(iris)
+
+# Scatter plot of Sepal.Length vs Sepal.Width colored by species
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Sepal Length vs Sepal Width",
+       x = "Sepal Length",
+       y = "Sepal Width")
+
+# Pairwise plot
+pairwise_plot <- ggpairs(iris, aes(color = Species, alpha = 0.6))
+print(pairwise_plot)  # Explicitly print the plot
+
+
+# Histogram of Petal.Length
+ggplot(iris, aes(x = Petal.Length)) +
+  geom_histogram(binwidth = 0.5, fill = "lightblue", color = "black") +
+  labs(title = "Histogram of Petal Length",
+       x = "Petal Length",
+       y = "Frequency")
+
