@@ -1,0 +1,55 @@
+
+print("Rohit Kumar B")
+print("22BDS0442")
+
+
+# Install DBI and RSQLite packages if not installed
+install.packages("DBI")
+install.packages("RSQLite")
+install.packages("tidyr")
+
+# Load required libraries
+library(DBI)
+library(RSQLite)
+library(tidyr)
+
+# Create an SQLite connection
+conn <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+# Create the sales performance dataframe
+sales_data <- data.frame(
+  Product_ID = c(2001, 2002, 2003, 2004, 2005),
+  Name = c("Laptop", "Smartphone", "Tablet", "Smartwatch", "Desktop"),
+  Units_Sold = c(150, 300, 100, 200, 75),
+  Price = c(1200, 800, 600, 300, 1000)
+)
+
+# Copy the data to SQLite database
+dbWriteTable(conn, "sales_data", sales_data)
+
+# 1
+result_i <- dbGetQuery(conn, "SELECT * FROM sales_data WHERE Units_Sold > 150")
+print(result_i)
+
+
+
+#2
+result_ii <- dbGetQuery(conn, "SELECT Name, Price FROM sales_data")
+print(result_ii)
+
+#3
+result_iii <- dbGetQuery(conn, "SELECT COUNT(*) as count_less_equal_100 FROM sales_data WHERE Units_Sold <= 100")
+print(result_iii)
+
+# 4
+result_iv <- dbGetQuery(conn, "SELECT Product_ID, Name FROM sales_data ORDER BY Price DESC LIMIT 1")
+print(result_iv)
+
+# 5
+dbExecute(conn, "UPDATE sales_data SET Price = Price * 1.10")
+
+# Retrieve and display the updated prices
+result_v <- dbGetQuery(conn, "SELECT * FROM sales_data")
+print(result_v)
+
+
