@@ -1,0 +1,109 @@
+# Print name and ID
+print("Rohit Kumar B")
+print("22BDS0442")
+
+# Load the necessary libraries
+library(ggplot2)
+library(dplyr)       # Ensure dplyr is loaded for filter()
+library(scales)      # Load the scales package for percent_format()
+library(tidyr)
+
+# Load data, skipping the unnecessary first 4 rows
+wb_data <- read.csv(
+  "C:/Study Related/SEM-6/Prog For DS/Prog For DS Lab/world_data.csv",
+  stringsAsFactors = FALSE, 
+  skip = 4
+)
+
+# Define the indicator for analysis
+indicator <- "Government expenditure on education, total (% of GDP)"
+
+# Filter data for the specified indicator
+expenditure_plot_data <- wb_data %>% 
+  filter(Indicator.Name == indicator)
+
+# Print the first few rows of filtered data
+print(head(expenditure_plot_data))
+
+# Create a scatter plot for expenditure in 1990 vs. 2014
+expenditure_chart <- ggplot(data = expenditure_plot_data) +
+  geom_text(mapping = aes(x = X1990 / 100, y = X2014 / 100, label = Country.Code)) +
+  scale_x_continuous(labels = percent_format()) +   # Format x-axis as percentages
+  scale_y_continuous(labels = percent_format()) +   # Format y-axis as percentages
+  labs(
+    title = indicator,
+    x = "Expenditure in 1990",
+    y = "Expenditure in 2014"
+  )
+
+# Display the expenditure chart
+print(expenditure_chart)
+
+# Transform data into long format for year-wise analysis
+long_year_data <- wb_data %>%
+  gather(
+    key = year,          # 'year' becomes the key column
+    value = value,       # 'value' becomes the column for expenditures
+    X1960:X              # Columns between X1960 and X are gathered
+  )
+
+# Filter data for Spain and clean up year formatting
+spain_plot_data <- long_year_data %>%
+  filter(
+    Indicator.Name == indicator,
+    Country.Code == "ESP"   # Filter for Spain (Country Code: ESP)
+  ) %>%
+  mutate(year = as.numeric(substr(year, 2, 5)))   # Remove "X" prefix from years
+
+# Print the first few rows of Spain's filtered data
+print(head(spain_plot_data))
+
+# Create a line chart for Spain's expenditure over time
+chart_title <- paste(indicator, "in Spain")
+spain_chart <- ggplot(data = spain_plot_data) +
+  geom_line(mapping = aes(x = year, y = value / 100)) +
+  scale_y_continuous(labels = percent_format()) +   # Format y-axis as percentages
+  labs(
+    title = chart_title,
+    x = "Year",
+    y = "Percent of GDP Expenditure"
+  )
+
+# Display the Spain expenditure chart
+print(spain_chart)
+
+# Transform data into wide format for comparison of multiple indicators
+wide_data <- long_year_data %>%
+  select(-Indicator.Code) %>%   # Remove unnecessary column
+  spread(key = Indicator.Name, value = value)
+
+# Define variables for literacy and unemployment rates (2014)
+x_var <- "Literacy rate, adult female (% of females ages 15 and above)"
+y_var <- "Unemployment, female (% of female labor force) (modeled ILO estimate)"
+
+# Prepare data for plotting literacy vs. unemployment rates in 2014
+lit_plot_data <- wide_data %>%
+  mutate(
+    lit_percent_2014 = wide_data[, x_var] / 100,
+    employ_percent_2014 = wide_data[, y_var] / 100
+  ) %>%
+  filter(year == "X2014")
+
+# Create a scatter plot for literacy vs. unemployment rates (2014)
+literacy_vs_unemployment_chart <- ggplot(data = lit_plot_data) +
+  geom_point(mapping = aes(x = lit_percent_2014, y = employ_percent_2014)) +
+  scale_x_continuous(labels = percent_format()) +   # Format x-axis as percentages
+  scale_y_continuous(labels = percent_format()) +   # Format y-axis as percentages
+  labs(
+    x = x_var,
+    y = "Unemployment, female (% of female labor force)",
+    title = "Female Literacy Rate versus Female Unemployment Rate"
+  )
+
+# Display the literacy vs. unemployment chart
+print(literacy_vs_unemployment_chart)
+
+
+
+
+
