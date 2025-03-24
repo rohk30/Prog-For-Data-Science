@@ -1,0 +1,36 @@
+# LAB ASSESSMENT 4
+
+# Creating a data frame
+df <- data.frame(
+  ID = c(1, 2, 3, 4, 5),
+  Name = c("Alice", "Bob", "Carol", "David", "Eve"),
+  Age = c(23, 30, 27, 35, 29),
+  Gender = c("F", "M", "F", "M", "F"),
+  Score = c(85, 90, 78, 88, 91)
+)
+
+head(df)
+
+print(df$Score)
+
+print(df[df$Score > 85, ])
+
+df$Passed <- df$Score >= 85
+print(df)
+
+summary(df[, c("Age", "Score")])
+
+df$Name[df$ID == 2] <- "Robert"
+print(df)
+
+#Sorting the data frame by the column 'Score' in the descending order
+df_sorted <- df[order(df$Score, decreasing = TRUE), ]
+print(df_sorted)
+
+df$Score[3] <- NA
+df$Score[is.na(df$Score)] <- mean(df$Score, na.rm = TRUE)
+print(df)
+
+df[df$Age < 30, c("Name", "Score")]
+
+
