@@ -1,0 +1,44 @@
+#LAB ASSESSMENT 4
+# QUESTION 2
+
+# Creating the data frame
+students <- data.frame(
+  StudentID = c(101, 102, 103, 104, 105),
+  Name = c("John", "Jane", "Mike", "Emily", "Anna"),
+  Age = c(21, 22, 20, 21, 22),
+  Gender = c("M", "F", "M", "F", "F"),
+  GPA = c(3.5, 3.8, 2.9, 3.6, 3.9)
+)
+
+
+# mean of all GPA
+mean_gpa <- mean(students$GPA)
+print(mean_gpa)
+
+#creating 2 new dataframes
+male_students <- students[students$Gender == "M", ]
+female_students <- students[students$Gender == "F", ]
+
+print(male_students)
+print(female_students)
+
+students$Classification <- ifelse(students$GPA >= 3.5, "High", "Low")
+
+highest_age_student <- students[which.max(students$Age), c("Name", "Age", "GPA")]
+print(highest_age_student)
+
+students_unique <- students[!duplicated(students$Name), ]
+print(students_unique)
+
+table(students$Gender)
+
+
+summary_gpa <- aggregate(GPA ~ Gender, data = students, FUN = mean)
+print(summary_gpa)
+
+students$GPA[2] <- NA
+
+median_gpa <- median(students$GPA, na.rm = TRUE)
+students$GPA[is.na(students$GPA)] <- median_gpa
+
+print(students)
