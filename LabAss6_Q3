@@ -1,0 +1,51 @@
+# Print name and ID
+print("Rohit Kumar B")
+print("22BD50442")
+
+# Install DBI and RSQLite packages if not installed
+install.packages("DBI")  # Warning: package 'DBI' is in use and will not be installed
+install.packages("RSQLite")  # Warning: package 'RSQLite' is in use and will not be installed
+install.packages("tidy")  # Warning: package 'tidy' is in use and will not be installed
+
+# Load required libraries
+library(DBI)
+library(RSQLite)
+library(tidy)
+
+# Create an SQLite connection
+conn <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+# Create the course performance dataframe
+courses_data <- data.frame(
+  Course_ID = c(3001, 3002, 3003, 3004, 3005),
+  Course_Name = c("Data Science", "Web Development", "Digital Marketing", "Cloud Computing", "Cybersecurity"),
+  Students_Enrolled = c(50, 75, 40, 90, 60),
+  Course_Fee = c(1200, 800, 600, 1000, 1500)
+)
+
+# Copy the data to the SQLite database
+dbWriteTable(conn, "courses_data", courses_data)
+
+# Query: Extract courses with more than 50 students enrolled
+result_i <- dbGetQuery(conn, "SELECT * FROM courses_data WHERE Students_Enrolled > 50")
+print(result_i)
+
+
+# Query: Retrieve course names and fees from the database
+result_ii <- dbGetQuery(conn, "SELECT Course_Name, Course_Fee FROM courses_data")
+print(result_ii)
+
+# Query: Count the number of courses where students enrolled are greater than 50
+result_iii <- dbGetQuery(conn, "SELECT COUNT(*) as count_courses FROM courses_data WHERE Students_Enrolled > 50")
+print(result_iii)
+
+# Query: Retrieve course names ordered by course fees
+result_iv <- dbGetQuery(conn, "SELECT Course_ID, Course_Name FROM courses_data ORDER BY Course_Fee")
+print(result_iv)
+
+# SQL Query: Update the fees by increasing them by 5%
+dbExecute(conn, "UPDATE courses_data SET Course_Fee = Course_Fee * 1.05")
+
+# Retrieve and display the updated fees
+result_v <- dbGetQuery(conn, "SELECT * FROM courses_data")
+print(result_v)
