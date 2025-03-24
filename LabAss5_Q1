@@ -1,0 +1,39 @@
+print("Rohit Kumar B")
+print("22BDS0442")
+
+# Load the packages
+library(dplyr)
+library(nycflights13)
+
+# 1. Which airline has the highest number of delayed departures?
+most_delayed_airline <- flights %>%
+  filter(dep_delay > 0) %>%
+  group_by(carrier) %>%
+  summarise(total_delays = n()) %>%
+  arrange(desc(total_delays)) %>%
+  head(1)
+
+most_delayed_airline <- as.data.frame(most_delayed_airline)
+print(most_delayed_airline)
+
+# 2. On average, to which airport do flights arrive most early?
+earliest_arrival_airport <- flights %>%
+  filter(arr_delay < 0) %>%
+  group_by(dest) %>%
+  summarise(avg_arrival_delay = mean(arr_delay, na.rm = TRUE)) %>%
+  arrange(avg_arrival_delay) %>%
+  head(1)
+
+earliest_arrival_airport <- as.data.frame(earliest_arrival_airport)
+print(earliest_arrival_airport)
+
+# 3. In which month do flights tend to have the longest delays?
+longest_delay_month <- flights %>%
+  group_by(month) %>%
+  summarise(avg_dep_delay = mean(dep_delay, na.rm = TRUE)) %>%
+  arrange(desc(avg_dep_delay)) %>%
+  head(1)
+
+longest_delay_month <- as.data.frame(longest_delay_month)
+print(longest_delay_month)
+
