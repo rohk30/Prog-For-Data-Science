@@ -1,0 +1,80 @@
+i)
+install.packages("readr")
+install.packages("dplyr")
+install.packages("ggplot2")
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+diabetes_data <- read_csv("C:/Study Related/SEM-6/Prog For DS/Prog For DS Lab/diabetes.csv")
+
+diabetes_data <- as.data.frame(diabetes_data)
+
+ii)
+a) 
+# Display the first 10 rows
+head(diabetes_data, 10)
+
+b) 
+summary(diabetes_data)
+
+c)
+str(diabetes_data)
+
+iii)
+a)
+sapply(diabetes_data, function(x) sum(is.na(x)))
+b)
+diabetes_data <- diabetes_data %>%
+  mutate(across(everything(), ~ ifelse(is.na(.), median(., na.rm = TRUE), .)))
+
+
+iv)
+a)
+#Histogram of glucose levels
+ggplot(diabetes_data, aes(x = Glucose)) +
+  geom_histogram(binwidth = 10, fill = "blue", color = "black") +
+  labs(title = "Distribution of Glucose Levels", x = "Glucose Level", y = "Frequency")
+
+b)
+# Boxplot for BMI distribution between Outcome categories
+ggplot(diabetes_data, aes(x = as.factor(Outcome), y = BMI, fill = as.factor(Outcome))) +
+  geom_boxplot() +
+  labs(title = "BMI Distribution by Outcome", x = "Outcome", y = "BMI")
+
+c)
+# Scatter plot for Insulin vs. Glucose, coloured by Outcome
+ggplot(diabetes_data, aes(x = Glucose, y = Insulin, color = as.factor(Outcome))) +
+  geom_point() +
+  labs(title = "Insulin vs Glucose by Outcome", x = "Glucose", y = "Insulin")
+
+d)
+# Histogram for Age distribution
+ggplot(diabetes_data, aes(x = Age)) +
+  geom_histogram(binwidth = 5, fill = "green", color = "black") +
+  labs(title = "Age Distribution", x = "Age", y = "Frequency")
+
+e)
+# Boxplot for Age distribution between Outcome categories
+ggplot(diabetes_data, aes(x = as.factor(Outcome), y = Age, fill = as.factor(Outcome))) +
+  geom_boxplot() +
+  labs(title = "Age Distribution by Outcome", x = "Outcome", y = "Age")
+
+v)
+a)
+# Calculate the correlation matrix
+correlation_matrix <- cor(diabetes_data %>% select_if(is.numeric))
+print(correlation_matrix)
+
+b)
+# Find the pair with the highest positive correlation
+cor_pairs <- as.data.frame(as.table(correlation_matrix))
+cor_pairs <- cor_pairs[order(-abs(cor_pairs$Freq)),]
+highest_cor_pair <- cor_pairs[cor_pairs$Var1 != cor_pairs$Var2,][1,]
+print(highest_cor_pair)
+
+
+
+
+
