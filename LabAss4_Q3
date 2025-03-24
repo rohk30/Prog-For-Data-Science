@@ -1,0 +1,48 @@
+i)
+library(ggplot2)
+library(dplyr)
+
+ii)
+head(airquality)
+
+iii)
+summary(airquality)
+
+iv)
+str(airquality)
+
+v)
+plot(airquality$Ozone, type = "l", main = "Ozone Levels Over Time", xlab = "Day", ylab = "Ozone", col = "blue")
+
+vi)
+#Handling missing data (Remove rows with missing values)
+airquality_clean <- na.omit(airquality)
+
+vii)
+head(airquality_clean)
+
+viii)
+a)	
+# Scatter plot of Ozone vs. Temperature with a regression line
+ggplot(airquality_clean, aes(x = Temp, y = Ozone)) +
+  geom_point(color = "darkgreen") +  # Scatter plot points
+  geom_smooth(method = "lm", color = "red", se = FALSE, size = 1) +  # Regression line
+  labs(title = "Scatter Plot of Ozone vs Temperature",
+       x = "Temperature (°F)", 
+       y = "Ozone (ppb)")
+
+b)
+# Creating temperature bins
+airquality_clean$TempBin <- cut(airquality_clean$Temp, 
+                                breaks = c(-Inf, 59, 69, 79, 89, Inf),
+                                labels = c("Below 60°F", "60-69°F", "70-79°F", "80-89°F", "90°F and above"))
+
+# Boxplot of Ozone levels for different temperature bins
+ggplot(airquality_clean, aes(x = TempBin, y = Ozone)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Boxplot of Ozone Levels by Temperature Bins",
+       x = "Temperature Bins", 
+       y = "Ozone (ppb)")
+
+
+
