@@ -1,0 +1,36 @@
+# 1. Which car model has the highest horsepower (hp)?
+most_powerful_car <- mtcars %>%
+  mutate(car_model = rownames(mtcars)) %>%  # Add car model as a column
+  arrange(desc(hp)) %>%
+  head(1) %>%
+  select(car_model, hp)
+
+most_powerful_car <- as.data.frame(most_powerful_car)
+print("Car model with the highest horsepower:")
+print(most_powerful_car)
+
+# 2. On average, which car model achieves the best fuel efficiency (mpg)?
+most_fuel_efficient_car <- mtcars %>%
+  mutate(car_model = rownames(mtcars)) %>%  # Add car model as a column
+  arrange(desc(mpg)) %>%
+  head(1) %>%
+  select(car_model, mpg)
+
+most_fuel_efficient_car <- as.data.frame(most_fuel_efficient_car)
+print("Car model with the best fuel efficiency:")
+print(most_fuel_efficient_car)
+
+
+# 3. In which number of cylinders (cyl) category do cars tend to have the highest average weight (wt)?
+heaviest_cylinder_category <- mtcars %>%
+  group_by(cyl) %>%
+  summarise(avg_weight = mean(wt)) %>%
+  arrange(desc(avg_weight)) %>%
+  head(1)
+
+heaviest_cylinder_category <- as.data.frame(heaviest_cylinder_category)
+print("Cylinder category with the highest average weight:")
+print(heaviest_cylinder_category)
+
+print("Rohit Kumar B")
+print("22BDS0442")
